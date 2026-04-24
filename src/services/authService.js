@@ -29,4 +29,10 @@ export const authService = {
     return !!localStorage.getItem('token');
   },
 
+  // Registrar nuevo usuario
+  register: async (email, password) => {
+    const response = await api.post('/auth/register', { email, password });
+    return response.data;
+  },
+
 };
