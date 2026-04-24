@@ -9,6 +9,10 @@ import { HomePage } from './pages/public/HomePage';
 import { LoginPage } from './pages/public/LoginPage';
 import { RegisterPage } from './pages/public/RegisterPage';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { PacienteDashboard } from './pages/paciente/PacienteDashboard';
+import { MisSolicitudes } from './pages/paciente/MisSolicitudes';
+import { MisCitas } from './pages/paciente/MisCitas';
+import { MiPerfil } from './pages/paciente/MiPerfil';
 import { PrivateRoute } from './components/common/PrivateRoute';
 
 function App() {
@@ -26,6 +30,10 @@ function App() {
           </Route>
           <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
             <Route path='/dashboard' element={<AdminDashboard />} />
+            <Route path='/paciente/dashboard' element={<PacienteDashboard />} />
+            <Route path='/paciente/solicitudes' element={<MisSolicitudes />} />
+            <Route path='/paciente/citas' element={<MisCitas />} />
+            <Route path='/paciente/perfil' element={<MiPerfil />} />
           </Route>
           <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>
