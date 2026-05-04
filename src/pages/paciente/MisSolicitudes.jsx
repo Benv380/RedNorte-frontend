@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { listaEsperaService } from '../../services/listaEsperaService';
-import { PosicionEspera } from '../../components/paciente/PosicionEspera';
+import { PosicionEspera } from '../../components/pacientes/PosicionEspera';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 

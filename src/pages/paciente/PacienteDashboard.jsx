@@ -3,7 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { listaEsperaService } from '../../services/listaEsperaService';
 import { citaService } from '../../services/citaService';
 import { reasignacionService } from '../../services/reasignacionService';
-import { AlertaReasignacion } from '../../components/paciente/AlertaReasignacion';
+import { AlertaReasignacion } from '../../components/pacientes/AlertaReasignacion';
 import { toast } from 'sonner';
 
 export const PacienteDashboard = () => {
