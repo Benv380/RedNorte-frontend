@@ -14,6 +14,7 @@ import { MisSolicitudes } from './pages/paciente/MisSolicitudes';
 import { MisCitas } from './pages/paciente/MisCitas';
 import { MiPerfil } from './pages/paciente/MiPerfil';
 import { PrivateRoute } from './components/common/PrivateRoute';
+import { NuevaSolicitud } from './pages/paciente/NuevaSolicitud';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path='/paciente/solicitudes' element={<MisSolicitudes />} />
             <Route path='/paciente/citas' element={<MisCitas />} />
             <Route path='/paciente/perfil' element={<MiPerfil />} />
+            <Route path='/paciente/nueva-solicitud' element={<NuevaSolicitud />} />
           </Route>
           <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>

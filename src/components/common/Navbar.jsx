@@ -45,6 +45,13 @@ export const Navbar = () => {
                 onClick={() => navigate('/paciente/perfil')}
                 className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
               >
+              <button
+                onClick={() => navigate('/paciente/nueva-solicitud')}
+                className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+              >
+                Nueva Solicitud
+              </button>
+              
                 Mi Perfil
               </button>
             </div>
