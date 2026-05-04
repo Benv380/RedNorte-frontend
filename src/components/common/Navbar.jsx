@@ -22,39 +22,38 @@ export const Navbar = () => {
             >
               RedNorte
             </span>
-            <div className='hidden md:flex gap-6'>
-              <button
-                onClick={() => navigate('/paciente/dashboard')}
-                className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
-              >
-                Dashboard
-              </button>
-              <button
-                onClick={() => navigate('/paciente/solicitudes')}
-                className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
-              >
-                Mis Solicitudes
-              </button>
-              <button
-                onClick={() => navigate('/paciente/citas')}
-                className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
-              >
-                Mis Citas
-              </button>
-              <button
-                onClick={() => navigate('/paciente/perfil')}
-                className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
-              >
-              <button
-                onClick={() => navigate('/paciente/nueva-solicitud')}
-                className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
-              >
-                Nueva Solicitud
-              </button>
-              
-                Mi Perfil
-              </button>
-            </div>
+          <div className='hidden md:flex gap-6'>
+            <button
+              onClick={() => navigate('/paciente/dashboard')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => navigate('/paciente/solicitudes')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Mis Solicitudes
+            </button>
+            <button
+              onClick={() => navigate('/paciente/citas')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Mis Citas
+            </button>
+            <button
+              onClick={() => navigate('/paciente/nueva-solicitud')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Nueva Solicitud
+            </button>
+            <button
+              onClick={() => navigate('/paciente/perfil')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Mi Perfil
+            </button>
+          </div>
           </div>
           <div className='flex items-center gap-4'>
             <span className='text-sm text-gray-600'>{user?.email}</span>

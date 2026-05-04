@@ -15,6 +15,7 @@ import { MisCitas } from './pages/paciente/MisCitas';
 import { MiPerfil } from './pages/paciente/MiPerfil';
 import { PrivateRoute } from './components/common/PrivateRoute';
 import { NuevaSolicitud } from './pages/paciente/NuevaSolicitud';
+import { DetalleCita } from './pages/paciente/DetalleCita';
 
 function App() {
   return (
@@ -29,13 +30,14 @@ function App() {
             <Route path='/login' element={<LoginPage />} />
             <Route path='/register' element={<RegisterPage />} />
           </Route>
-          <Route element={<PrivateRoute><MainLayout /></PrivateRoute>}>
+          <Route element={<MainLayout />}>
             <Route path='/dashboard' element={<AdminDashboard />} />
             <Route path='/paciente/dashboard' element={<PacienteDashboard />} />
             <Route path='/paciente/solicitudes' element={<MisSolicitudes />} />
             <Route path='/paciente/citas' element={<MisCitas />} />
             <Route path='/paciente/perfil' element={<MiPerfil />} />
             <Route path='/paciente/nueva-solicitud' element={<NuevaSolicitud />} />
+            <Route path='/paciente/citas/:id' element={<DetalleCita />} />
           </Route>
           <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>
