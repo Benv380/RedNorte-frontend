@@ -1,44 +1,39 @@
-// src/pages/paciente/MisCitas.jsx
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { citaService } from '../../services/citaService';
 import { toast } from 'sonner';
+
+const ESTADO_ESTILOS = {
+  PROGRAMADA: 'bg-amber-100 text-amber-800',
+  CONFIRMADA: 'bg-blue-100 text-blue-800',
+  REALIZADA:  'bg-green-100 text-green-800',
+  CANCELADA:  'bg-red-100 text-red-800',
+  NO_ASISTIO: 'bg-gray-100 text-gray-600',
+};
 
 export const MisCitas = () => {
   const [citas, setCitas] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    cargarCitas();
-  }, []);
+  useEffect(() => { cargarCitas(); }, []);
 
   const cargarCitas = async () => {
     try {
       const data = await citaService.getAll();
       setCitas(data);
-    } catch (error) {
+    } catch {
       toast.error('Error al cargar citas');
     } finally {
       setLoading(false);
     }
   };
 
-  const cancelarCita = async (id) => {
-    try {
-      await citaService.cancel(id);
-      toast.success('Cita cancelada');
-      cargarCitas();
-    } catch (error) {
-      toast.error('Error al cancelar cita');
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className='flex items-center justify-center h-64'>
-        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600' />
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className='flex items-center justify-center h-64'>
+      <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600' />
+    </div>
+  );
 
   return (
     <div>
@@ -65,20 +60,20 @@ export const MisCitas = () => {
               {citas.map((cita) => (
                 <tr key={cita.id} className='hover:bg-gray-50'>
                   <td className='px-6 py-4 text-sm text-gray-800'>#{cita.id}</td>
-                  <td className='px-6 py-4 text-sm text-gray-600'>{cita.medico}</td>
+                  <td className='px-6 py-4 text-sm text-gray-600'>{cita.nombreMedico}</td>
                   <td className='px-6 py-4 text-sm text-gray-600'>{cita.especialidad}</td>
-                  <td className='px-6 py-4 text-sm text-gray-600'>{cita.fechaCita}</td>
+                  <td className='px-6 py-4 text-sm text-gray-600'>{cita.fechaHoraCita}</td>
                   <td className='px-6 py-4'>
-                    <span className='px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700'>
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${ESTADO_ESTILOS[cita.estado] ?? 'bg-gray-100 text-gray-600'}`}>
                       {cita.estado}
                     </span>
                   </td>
                   <td className='px-6 py-4'>
                     <button
-                      onClick={() => cancelarCita(cita.id)}
-                      className='text-red-500 hover:text-red-700 text-sm font-medium'
+                      onClick={() => navigate(`/paciente/citas/${cita.id}`)}
+                      className='text-blue-600 hover:text-blue-800 text-sm font-medium'
                     >
-                      Cancelar
+                      Ver detalle
                     </button>
                   </td>
                 </tr>
