@@ -27,6 +27,7 @@ export const authService = {
         localStorage.removeItem('user');
     },
 
+<<<<<<< HEAD
     getCurrentUser: () => {
         try {
             const raw = localStorage.getItem('user');
@@ -35,4 +36,24 @@ export const authService = {
             return null;
         }
     }
+=======
+
+  // Login BENJA para pruebas (NO TOCAR)
+  devLogin: () => {
+    const fakeUser = {
+      id: 1,
+      name: "Dev User",
+      email: "dev@test.com",
+      role: "admin"
+    };
+
+    const fakeToken = "dev-token";
+
+    localStorage.setItem('token', fakeToken);
+    localStorage.setItem('user', JSON.stringify(fakeUser));
+
+    return { token: fakeToken, user: fakeUser };
+  },
+
+>>>>>>> cb6510545e822ef62e04eff8ec36a9969096db23
 };

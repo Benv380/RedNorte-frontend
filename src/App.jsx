@@ -16,6 +16,7 @@ import { PacienteDashboard } from './pages/paciente/PacienteDashboard';
 import { MisSolicitudes } from './pages/paciente/MisSolicitudes';
 import { MisCitas } from './pages/paciente/MisCitas';
 import { MiPerfil } from './pages/paciente/MiPerfil';
+<<<<<<< HEAD
 
 // Funcionario (crear estos archivos)
 import { FuncionarioDashboard } from './pages/funcionario/FuncionarioDashboard';
@@ -35,6 +36,11 @@ import { ListaEsperaGlobal } from './pages/admin/ListaEsperaGlobal';
 // Admin Software (crear estos archivos)
 import { AdminSoftDashboard } from './pages/admin/AdminSoftDashboard';
 import { GestionPermisos } from './pages/admin/GestionPermisos';
+=======
+import { PrivateRoute } from './components/common/PrivateRoute';
+import { NuevaSolicitud } from './pages/paciente/NuevaSolicitud';
+import { DetalleCita } from './pages/paciente/DetalleCita';
+>>>>>>> cb6510545e822ef62e04eff8ec36a9969096db23
 
 function App() {
   return (
@@ -53,6 +59,7 @@ function App() {
             <Route path='/login'    element={<LoginPage />} />
             <Route path='/register' element={<RegisterPage />} />
           </Route>
+<<<<<<< HEAD
 
           {/* Paciente */}
           <Route element={<PrivateRoute allowedRoles={['PACIENTE']}><MainLayout /></PrivateRoute>}>
@@ -60,6 +67,16 @@ function App() {
             <Route path='/paciente/solicitudes' element={<MisSolicitudes />} />
             <Route path='/paciente/citas'       element={<MisCitas />} />
             <Route path='/paciente/perfil'      element={<MiPerfil />} />
+=======
+          <Route element={<MainLayout />}>
+            <Route path='/dashboard' element={<AdminDashboard />} />
+            <Route path='/paciente/dashboard' element={<PacienteDashboard />} />
+            <Route path='/paciente/solicitudes' element={<MisSolicitudes />} />
+            <Route path='/paciente/citas' element={<MisCitas />} />
+            <Route path='/paciente/perfil' element={<MiPerfil />} />
+            <Route path='/paciente/nueva-solicitud' element={<NuevaSolicitud />} />
+            <Route path='/paciente/citas/:id' element={<DetalleCita />} />
+>>>>>>> cb6510545e822ef62e04eff8ec36a9969096db23
           </Route>
 
           {/* Funcionario */}

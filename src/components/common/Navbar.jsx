@@ -48,6 +48,7 @@ export const Navbar = () => {
               className="text-xl font-bold text-blue-600 cursor-pointer">
               🏥 RedNorte
             </span>
+<<<<<<< HEAD
             <div className="hidden md:flex gap-6">
               {links.map((l) => (
                 <button key={l.ruta} onClick={() => navigate(l.ruta)}
@@ -56,6 +57,40 @@ export const Navbar = () => {
                 </button>
               ))}
             </div>
+=======
+          <div className='hidden md:flex gap-6'>
+            <button
+              onClick={() => navigate('/paciente/dashboard')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Dashboard
+            </button>
+            <button
+              onClick={() => navigate('/paciente/solicitudes')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Mis Solicitudes
+            </button>
+            <button
+              onClick={() => navigate('/paciente/citas')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Mis Citas
+            </button>
+            <button
+              onClick={() => navigate('/paciente/nueva-solicitud')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Nueva Solicitud
+            </button>
+            <button
+              onClick={() => navigate('/paciente/perfil')}
+              className='text-sm text-gray-600 hover:text-blue-600 transition-colors'
+            >
+              Mi Perfil
+            </button>
+          </div>
+>>>>>>> cb6510545e822ef62e04eff8ec36a9969096db23
           </div>
           <div className="flex items-center gap-3">
             <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-full font-medium">
