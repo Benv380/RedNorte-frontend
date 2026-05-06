@@ -1,71 +1,63 @@
-// src/pages/public/LoginPage.jsx
-import { useForm } from 'react-hook-form';
-import { useAuth } from '../../hooks/useAuth';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import { AuthContext } from '../../context/AuthContext';
 
 export const LoginPage = () => {
-  const { login } = useAuth();
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm();
+  const { register, handleSubmit, formState: { isSubmitting } } = useForm();
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
-      toast.success('Sesión iniciada correctamente');
-      navigate('/dashboard');
+      // ✅ Aquí recibimos el objeto y usamos redirectUrl
+      const response = await login(data.email, data.password);
+      
+      toast.success('Bienvenido');
+      
+      // ✅ Usamos la URL que mandó el backend
+      if (response && response.redirectUrl) {
+        navigate(response.redirectUrl);
+      } else {
+        navigate('/dashboard'); // Ruta por defecto si algo falla
+      }
     } catch (error) {
       toast.error('Credenciales incorrectas');
     }
   };
 
   return (
-    <div className='bg-white rounded-xl shadow-md p-8'>
-      <h2 className='text-2xl font-bold text-gray-800 mb-6 text-center'>
-        Iniciar Sesión
-      </h2>
-      <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Email
-          </label>
-          <input
-            type='email'
-            {...register('email', { required: 'El email es obligatorio' })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none'
-            placeholder='correo@ejemplo.com'
-          />
-          {errors.email && (
-            <p className='text-red-500 text-sm mt-1'>{errors.email.message}</p>
-          )}
-        </div>
-        <div>
-          <label className='block text-sm font-medium text-gray-700 mb-1'>
-            Contraseña
-          </label>
-          <input
-            type='password'
-            {...register('password', { required: 'La contraseña es obligatoria' })}
-            className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none'
-            placeholder='••••••••'
-          />
-          {errors.password && (
-            <p className='text-red-500 text-sm mt-1'>{errors.password.message}</p>
-          )}
-        </div>
+    <div className="bg-white rounded-xl shadow-md p-8 max-w-md mx-auto mt-10">
+      <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">Red Norte</h2>
+      <p className="text-sm text-gray-500 text-center mb-6">Ingresa al sistema</p>
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <input
+          type="email"
+          {...register('email', { required: true })}
+          placeholder="tu@email.cl"
+          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+        />
+
+        <input
+          type="password"
+          {...register('password', { required: true })}
+          placeholder="••••••••"
+          className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+        />
+
         <button
-          type='submit'
+          type="submit"
           disabled={isSubmitting}
-          className='w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors disabled:opacity-50'
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors"
         >
-          {isSubmitting ? 'Iniciando...' : 'Iniciar Sesión'}
+          {isSubmitting ? 'Ingresando...' : 'Ingresar'}
         </button>
       </form>
-      <p className='text-center text-sm text-gray-600 mt-4'>
-        ¿No tienes cuenta?{' '}
-        <a href='/register' className='text-blue-600 hover:underline'>
-          Regístrate
-        </a>
+      
+      <p className="text-center text-sm text-gray-600 mt-4">
+        ¿Eres nuevo? <a href="/register" className="text-blue-600 hover:underline">Regístrate</a>
       </p>
     </div>
   );

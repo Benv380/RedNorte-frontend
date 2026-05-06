@@ -1,17 +1,18 @@
-// src/components/common/PrivateRoute.jsx
+// PrivateRoute.jsx
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
-export const PrivateRoute = ({ children }) => {
-  const { isAuthenticated, loading } = useAuth();
+export const PrivateRoute = ({ children, allowedRoles }) => {
+  const { user } = useContext(AuthContext);
 
-  if (loading) {
-    return (
-      <div className='min-h-screen flex items-center justify-center'>
-        <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600' />
-      </div>
-    );
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
-  return isAuthenticated ? children : <Navigate to='/login' replace />;
+  if (allowedRoles && !allowedRoles.includes(user.rol)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
 };

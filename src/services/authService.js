@@ -1,38 +1,38 @@
-// src/services/authService.js
 import api from './api';
 
 export const authService = {
+    login: async (email, password) => {
+        const res = await api.post('/auth/login', { email, password });
+        
+        // Guardamos solo lo necesario para el estado persistente
+        const { token, rol, nombre } = res.data;
 
-  // Iniciar sesión
-  login: async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
-    const { token, user } = response.data;
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
-    return { token, user };
-  },
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify({ token, rol, nombre, email }));
 
-  // Cerrar sesión
-  logout: () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  },
+        return res.data; // Aquí va el redirectUrl que usará el componente
+    },
 
-  // Obtener usuario actual desde localStorage
-  getCurrentUser: () => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-  },
+    register: async (email, password, nombreCompleto) => {
+        const res = await api.post('/auth/register', { 
+            email, 
+            password, 
+            nombreCompleto 
+        });
+        return res.data;
+    },
 
-  // Verificar si hay token activo
-  isAuthenticated: () => {
-    return !!localStorage.getItem('token');
-  },
+    logout: () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+    },
 
-  // Registrar nuevo usuario
-  register: async (email, password) => {
-    const response = await api.post('/auth/register', { email, password });
-    return response.data;
-  },
-
+    getCurrentUser: () => {
+        try {
+            const raw = localStorage.getItem('user');
+            return raw ? JSON.parse(raw) : null;
+        } catch {
+            return null;
+        }
+    }
 };

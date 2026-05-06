@@ -1,11 +1,10 @@
-// src/hooks/useAuth.js
-import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext';
-
+// src/hooks/useAuth.js (Modificación temporal)
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth debe usarse dentro de AuthProvider');
-  }
-  return context;
+  return {
+    user: { name: "Admin Test", role: "ADMIN" },
+    loading: false,
+    isAuthenticated: true, // Forzamos la entrada
+    login: () => {},
+    logout: () => {}
+  };
 };
