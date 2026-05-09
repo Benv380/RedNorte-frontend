@@ -16,14 +16,14 @@ export const AuthProvider = ({ children }) => {
   });
 
   const login = async (email, password) => {
-    const { token, rol, nombre, redirectUrl } = await authService.login(email, password);
+    const { id, token, rol, nombre, redirectUrl } = await authService.login(email, password); // 👈 agrega id
 
-    const userData = { token, rol, nombre, email };
+    const userData = { id, token, rol, nombre, email };
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(userData));
 
     setUser(userData);
-    return redirectUrl; // ← retorna el string, no un objeto
+    return redirectUrl;
   };
 
   const logout = () => {

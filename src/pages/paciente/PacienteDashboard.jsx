@@ -16,21 +16,22 @@ export const PacienteDashboard = () => {
   useEffect(() => { cargarDatos(); }, []);
 
   const cargarDatos = async () => {
-    try {
-      const [solicitudesData, citasData, ofertasData] = await Promise.all([
-        listaEsperaService.getAll(),
-        citaService.getAll(),
-        reasignacionService.getPendientes(),
-      ]);
-      setSolicitudes(solicitudesData);
-      setCitas(citasData);
-      setOfertasPendientes(ofertasData);
-    } catch {
-      toast.error('Error al cargar datos');
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    if (!user?.id) return; // <-- no llamar si no hay id
+
+    const [solicitudesData, citasData] = await Promise.all([
+      listaEsperaService.getByPaciente(user.id),
+      citaService.getAll(),
+    ]);
+    setSolicitudes(solicitudesData);
+    setCitas(citasData);
+    setOfertasPendientes([]); // reasignación no disponible para PACIENTE
+  } catch {
+    toast.error('Error al cargar datos');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const proximaCita = citas.find(c => c.estado === 'PROGRAMADA' || c.estado === 'CONFIRMADA');
   const citasRealizadas = citas.filter(c => c.estado === 'REALIZADA').length;
@@ -122,11 +123,10 @@ export const PacienteDashboard = () => {
                 <tr key={s.id} className="hover:bg-gray-50">
                   <td className="px-5 py-3 text-sm text-gray-800">{s.especialidad}</td>
                   <td className="px-5 py-3">
-                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                      s.estado === 'PENDIENTE' ? 'bg-amber-100 text-amber-800' :
-                      s.estado === 'ASIGNADO'  ? 'bg-blue-100 text-blue-800' :
-                      'bg-gray-100 text-gray-600'
-                    }`}>{s.estado}</span>
+                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${s.estado === 'PENDIENTE' ? 'bg-amber-100 text-amber-800' :
+                      s.estado === 'ASIGNADO' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-600'
+                      }`}>{s.estado}</span>
                   </td>
                   <td className="px-5 py-3 text-sm text-gray-600">
                     {s.posicion ? `${s.posicion} / ${s.totalEspera}` : '—'}
