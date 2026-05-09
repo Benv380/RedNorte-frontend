@@ -1,59 +1,55 @@
 import api from './api';
 
 export const authService = {
-    login: async (email, password) => {
-        const res = await api.post('/auth/login', { email, password });
-        
-        // Guardamos solo lo necesario para el estado persistente
-        const { token, rol, nombre } = res.data;
+  login: async (email, password) => {
+    const res = await api.post('/auth/login', { email, password });
 
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify({ token, rol, nombre, email }));
+    const { token, rol, nombre } = res.data;
 
-        return res.data; // Aquí va el redirectUrl que usará el componente
-    },
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify({ token, rol, nombre, email }));
 
-    register: async (email, password, nombreCompleto) => {
-        const res = await api.post('/auth/register', { 
-            email, 
-            password, 
-            nombreCompleto 
-        });
-        return res.data;
-    },
+    return res.data;
+  },
 
-    logout: () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-    },
+  register: async (email, password, nombreCompleto) => {
+    const res = await api.post('/auth/register', {
+      email,
+      password,
+      nombreCompleto
+    });
 
-<<<<<<< HEAD
-    getCurrentUser: () => {
-        try {
-            const raw = localStorage.getItem('user');
-            return raw ? JSON.parse(raw) : null;
-        } catch {
-            return null;
-        }
+    return res.data;
+  },
+
+  logout: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+  },
+
+  getCurrentUser: () => {
+    try {
+      const raw = localStorage.getItem('user');
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
     }
-=======
+  },
 
   // Login BENJA para pruebas (NO TOCAR)
   devLogin: () => {
     const fakeUser = {
       id: 1,
-      name: "Dev User",
-      email: "dev@test.com",
-      role: "admin"
+      name: 'Dev User',
+      email: 'dev@test.com',
+      role: 'admin'
     };
 
-    const fakeToken = "dev-token";
+    const fakeToken = 'dev-token';
 
     localStorage.setItem('token', fakeToken);
     localStorage.setItem('user', JSON.stringify(fakeUser));
 
     return { token: fakeToken, user: fakeUser };
-  },
-
->>>>>>> cb6510545e822ef62e04eff8ec36a9969096db23
+  }
 };
