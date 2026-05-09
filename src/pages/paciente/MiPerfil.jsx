@@ -76,6 +76,10 @@ export const MiPerfil = () => {
                 type='text'
                 name='nombre'
                 value={form.nombre}
+                readOnly
+                onClick={() =>
+                  alert('El nombre no se puede modificar, favor acercarse al centro más cercano para solicitar el cambio')
+                }
                 onChange={handleChange}
                 placeholder='Ingresa tu nombre'
                 className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
@@ -92,6 +96,10 @@ export const MiPerfil = () => {
                 type='text'
                 name='rut'
                 value={form.rut}
+                readOnly
+                onClick={() =>
+                  alert('El RUT no se puede modificar')
+                }
                 onChange={handleChange}
                 placeholder='12.345.678-9'
                 className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
