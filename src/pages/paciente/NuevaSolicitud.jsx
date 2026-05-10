@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { listaEsperaService } from '../../services/listaEsperaService';
 import { toast } from 'sonner';
+import { useAuth } from "../../hooks/useAuth";
 
 const ESPECIALIDADES = [
   'Cardiología', 'Neurología', 'Traumatología', 'Oftalmología',
@@ -13,18 +14,36 @@ const HOSPITALES = [
   'Hospital del Norte', 'Clínica RedNorte', 'Centro Médico Norte',
 ];
 
+const CENTROS_ASISTENCIALES = [
+  'Hospital del Norte',
+  'Hospital San José',
+  'Centro de Salud Familiar (CESFAM) Lo Barnechea',
+  'Centro de Salud Familiar (CESFAM) Huechuraba',
+  'Clínica Especialidades Norte',
+  'Centro Médico RedNorte Quilicura',
+];
+
 export const NuevaSolicitud = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+<<<<<<< HEAD
   const [form, setForm] = useState({ especialidad: '', hospital: '', observaciones: '' });
+=======
+  const [form, setForm] = useState({ especialidad: '', motivo: '', hospital: '' });
+>>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+<<<<<<< HEAD
     if (!form.especialidad || !form.hospital) {
       toast.error('Selecciona especialidad y hospital');
+=======
+    if (!form.especialidad || !form.motivo || !form.hospital) { // 👈 aquí
+      toast.error('Completa todos los campos');
+>>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
       return;
     }
     setLoading(true);
@@ -34,7 +53,11 @@ export const NuevaSolicitud = () => {
         especialidad: form.especialidad,
         hospital: form.hospital,
         prioridad: 2,
+<<<<<<< HEAD
         observaciones: form.observaciones || undefined,
+=======
+        observaciones: form.motivo || '',
+>>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
       });
       toast.success('Solicitud enviada correctamente');
       navigate('/paciente/solicitudes');
@@ -44,7 +67,6 @@ export const NuevaSolicitud = () => {
       setLoading(false);
     }
   };
-
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Nueva solicitud</h1>
@@ -70,7 +92,30 @@ export const NuevaSolicitud = () => {
             </div>
 
             <div>
+<<<<<<< HEAD
               <label className="block text-sm font-medium text-gray-600 mb-1">Hospital</label>
+=======
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Centro asistencial
+              </label>
+              <select
+                name="hospital"
+                value={form.hospital}
+                onChange={handleChange}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              >
+                <option value="">Seleccionar centro asistencial...</option>
+                {CENTROS_ASISTENCIALES.map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Motivo de consulta
+              </label>
+>>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
               <select
                 name="hospital"
                 value={form.hospital}

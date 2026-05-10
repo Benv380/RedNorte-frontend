@@ -13,7 +13,6 @@ export const PrivateRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // App.jsx usa PrivateRoute como wrapper con children (<MainLayout />)
-  // así que renderizamos children, no <Outlet />
+
   return children;
 };
