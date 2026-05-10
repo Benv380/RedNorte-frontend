@@ -1,24 +1,27 @@
-import api from './api';
+import pacienteApi from './pacienteApi';
+import medicoApi from './medicoApi';
 
 export const authService = {
-  login: async (email, password) => {
-    const res = await api.post('/auth/login', { email, password });
-
-    const { token, rol, nombre } = res.data;
-
+  loginPaciente: async (email, password) => {
+    const res = await pacienteApi.post('/auth/login', { email, password });
+    const { token, rol, nombre, redirectUrl, id } = res.data;
+    const userData = { token, rol, nombre, email, id };
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify({ token, rol, nombre, email }));
-
-    return res.data;
+    localStorage.setItem('user', JSON.stringify(userData));
+    return { ...userData, redirectUrl };
   },
 
-  register: async (email, password, nombreCompleto) => {
-    const res = await api.post('/auth/register', {
-      email,
-      password,
-      nombreCompleto
-    });
+  loginMedico: async (email, password) => {
+    const res = await medicoApi.post('/auth/login', { email, password });
+    const { token, rol, nombre, redirectUrl, id } = res.data;
+    const userData = { token, rol, nombre, email, id };
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(userData));
+    return { ...userData, redirectUrl };
+  },
 
+  registerPaciente: async (email, password, nombreCompleto, rut, fechaNacimiento) => {
+    const res = await pacienteApi.post('/auth/register', { email, password, nombreCompleto, rut, fechaNacimiento });
     return res.data;
   },
 
@@ -35,21 +38,4 @@ export const authService = {
       return null;
     }
   },
-
-  // Login BENJA para pruebas (NO TOCAR)
-  devLogin: () => {
-    const fakeUser = {
-      id: 1,
-      name: 'Dev User',
-      email: 'dev@test.com',
-      role: 'admin'
-    };
-
-    const fakeToken = 'dev-token';
-
-    localStorage.setItem('token', fakeToken);
-    localStorage.setItem('user', JSON.stringify(fakeUser));
-
-    return { token: fakeToken, user: fakeUser };
-  }
 };

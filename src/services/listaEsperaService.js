@@ -1,42 +1,49 @@
-// src/services/listaEsperaService.js
-import api from './api';
+import listaEsperaApi from './listaEsperaApi';
 
 export const listaEsperaService = {
 
-  // Obtener todas las solicitudes
   getAll: async () => {
-    const response = await api.get('/lista-espera');
-    return response.data;
+    const res = await listaEsperaApi.get('/v1/lista-espera/pendientes');
+    return res.data;
   },
 
-  // Obtener una solicitud por ID
   getById: async (id) => {
-    const response = await api.get(`/lista-espera/${id}`);
-    return response.data;
+    const res = await listaEsperaApi.get(`/v1/lista-espera/${id}`);
+    return res.data;
   },
 
-  // Crear nueva solicitud
-  create: async (solicitudData) => {
-    const response = await api.post('/lista-espera', solicitudData);
-    return response.data;
+  getByEstado: async (estado) => {
+    const res = await listaEsperaApi.get(`/v1/lista-espera/estado/${estado}`);
+    return res.data;
   },
 
-  // Actualizar estado de una solicitud
-  updateEstado: async (id, estado) => {
-    const response = await api.put(`/lista-espera/${id}/estado`, { estado });
-    return response.data;
-  },
-
-  // Obtener solicitudes por paciente
   getByPaciente: async (pacienteId) => {
-    const response = await api.get(`/lista-espera/paciente/${pacienteId}`);
-    return response.data;
+    const res = await listaEsperaApi.get(`/v1/lista-espera/paciente/${pacienteId}`);
+    return res.data;
   },
 
-  // Eliminar solicitud
+  create: async (data) => {
+    const res = await listaEsperaApi.post('/v1/lista-espera', data);
+    return res.data;
+  },
+
+  asignar: async (id) => {
+    const res = await listaEsperaApi.put(`/v1/lista-espera/${id}/asignar`);
+    return res.data;
+  },
+
+  atender: async (id) => {
+    const res = await listaEsperaApi.put(`/v1/lista-espera/${id}/atender`);
+    return res.data;
+  },
+
+  cancelar: async (id) => {
+    const res = await listaEsperaApi.put(`/v1/lista-espera/${id}/cancelar`);
+    return res.data;
+  },
+
   delete: async (id) => {
-    const response = await api.delete(`/lista-espera/${id}`);
-    return response.data;
+    const res = await listaEsperaApi.delete(`/v1/lista-espera/${id}`);
+    return res.data;
   },
-
 };

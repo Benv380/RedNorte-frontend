@@ -1,48 +1,69 @@
-// src/services/citaService.js
-import api from './api';
+import listaEsperaApi from './listaEsperaApi';
 
 export const citaService = {
 
-  // Obtener todas las citas
   getAll: async () => {
-    const response = await api.get('/citas');
-    return response.data;
+    const res = await listaEsperaApi.get('/v1/citas/estado/PROGRAMADA');
+    return res.data;
   },
 
-  // Obtener una cita por ID
   getById: async (id) => {
-    const response = await api.get(`/citas/${id}`);
-    return response.data;
+    const res = await listaEsperaApi.get(`/v1/citas/${id}`);
+    return res.data;
   },
 
-  // Crear nueva cita
-  create: async (citaData) => {
-    const response = await api.post('/citas', citaData);
-    return response.data;
+  getBySolicitud: async (listaEsperaId) => {
+    const res = await listaEsperaApi.get(`/v1/citas/solicitud/${listaEsperaId}`);
+    return res.data;
   },
 
-  // Actualizar una cita
-  update: async (id, citaData) => {
-    const response = await api.put(`/citas/${id}`, citaData);
-    return response.data;
+  getByEstado: async (estado) => {
+    const res = await listaEsperaApi.get(`/v1/citas/estado/${estado}`);
+    return res.data;
   },
 
-  // Cancelar una cita
-  cancel: async (id) => {
-    const response = await api.put(`/citas/${id}/cancelar`);
-    return response.data;
-  },
-
-  // Obtener citas por paciente
   getByPaciente: async (pacienteId) => {
-    const response = await api.get(`/citas/paciente/${pacienteId}`);
-    return response.data;
+    const res = await listaEsperaApi.get(`/v1/citas/paciente/${pacienteId}`);
+    return res.data;
   },
 
-  // Eliminar una cita
+  getByMedico: async (medicoId) => {
+    const res = await listaEsperaApi.get(`/v1/citas/medico/${medicoId}`);
+    return res.data;
+  },
+
+  getReasignacion: async () => {
+    const res = await listaEsperaApi.get('/v1/citas/reasignacion');
+    return res.data;
+  },
+
+  create: async (citaData) => {
+    const res = await listaEsperaApi.post('/v1/citas', citaData);
+    return res.data;
+  },
+
+  confirmar: async (id) => {
+    const res = await listaEsperaApi.put(`/v1/citas/${id}/confirmar`);
+    return res.data;
+  },
+
+  realizar: async (id) => {
+    const res = await listaEsperaApi.put(`/v1/citas/${id}/realizar`);
+    return res.data;
+  },
+
+  cancelar: async (id, motivo = 'Sin motivo especificado') => {
+    const res = await listaEsperaApi.put(`/v1/citas/${id}/cancelar`, null, { params: { motivo } });
+    return res.data;
+  },
+
+  marcarNoAsistio: async (id) => {
+    const res = await listaEsperaApi.put(`/v1/citas/${id}/no-asistio`);
+    return res.data;
+  },
+
   delete: async (id) => {
-    const response = await api.delete(`/citas/${id}`);
-    return response.data;
+    const res = await listaEsperaApi.delete(`/v1/citas/${id}`);
+    return res.data;
   },
-
 };

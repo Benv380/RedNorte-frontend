@@ -10,20 +10,20 @@ export const AuthProvider = ({ children }) => {
       const stored = localStorage.getItem('user');
       return stored ? JSON.parse(stored) : null;
     } catch {
-      localStorage.removeItem('user'); // limpia si estaba corrupto
+      localStorage.removeItem('user');
       return null;
     }
   });
 
-  const login = async (email, password) => {
-    const { token, rol, nombre, redirectUrl } = await authService.login(email, password);
+  const login = async (email, password, tipo = 'PACIENTE') => {
+    const result = tipo === 'PACIENTE'
+      ? await authService.loginPaciente(email, password)
+      : await authService.loginMedico(email, password);
 
-    const userData = { token, rol, nombre, email };
-    localStorage.setItem('token', token);
+    const userData = { token: result.token, rol: result.rol, nombre: result.nombre, email: result.email, id: result.id };
     localStorage.setItem('user', JSON.stringify(userData));
-
     setUser(userData);
-    return redirectUrl; // ← retorna el string, no un objeto
+    return result;
   };
 
   const logout = () => {

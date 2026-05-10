@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { citaService } from '../../services/citaService';
 import { toast } from 'sonner';
+import { useAuth } from '../../hooks/useAuth';
 
 const ESTADO_ESTILOS = {
   PROGRAMADA: 'bg-amber-100 text-amber-800',
@@ -12,6 +13,7 @@ const ESTADO_ESTILOS = {
 };
 
 export const MisCitas = () => {
+  const { user } = useAuth();
   const [citas, setCitas] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -19,8 +21,9 @@ export const MisCitas = () => {
   useEffect(() => { cargarCitas(); }, []);
 
   const cargarCitas = async () => {
+    if (!user?.id) { setLoading(false); return; }
     try {
-      const data = await citaService.getAll();
+      const data = await citaService.getByPaciente(user.id);
       setCitas(data);
     } catch {
       toast.error('Error al cargar citas');

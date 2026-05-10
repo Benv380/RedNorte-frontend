@@ -1,12 +1,16 @@
-import api from './api';
+import listaEsperaApi from './listaEsperaApi';
 
 export const reasignacionService = {
   getPendientes: async () => {
-    const response = await api.get('/reasignacion/pendientes');
-    return response.data;
+    try {
+      const res = await listaEsperaApi.get('/v1/citas/reasignacion');
+      return Array.isArray(res.data) ? res.data : [];
+    } catch {
+      return [];
+    }
   },
   responder: async (id, acepta) => {
-    const response = await api.put(`/reasignacion/${id}/responder`, { acepta });
-    return response.data;
+    const res = await listaEsperaApi.put(`/v1/citas/${id}/confirmar`);
+    return res.data;
   },
 };

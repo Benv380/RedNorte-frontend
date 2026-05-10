@@ -1,48 +1,45 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import { listaEsperaService } from '../../services/listaEsperaService';
 import { toast } from 'sonner';
 
 const ESPECIALIDADES = [
-  'Cardiología',
-  'Neurología',
-  'Traumatología',
-  'Oftalmología',
-  'Dermatología',
-  'Pediatría',
-  'Ginecología',
-  'Urología',
+  'Cardiología', 'Neurología', 'Traumatología', 'Oftalmología',
+  'Dermatología', 'Pediatría', 'Ginecología', 'Urología', 'Medicina General',
 ];
 
-const MOTIVOS = [
-  'Control médico',
-  'Procedimiento diagnóstico',
-  'Intervención quirúrgica',
-  'Urgencia',
+const HOSPITALES = [
+  'Hospital del Norte', 'Clínica RedNorte', 'Centro Médico Norte',
 ];
 
 export const NuevaSolicitud = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ especialidad: '', motivo: '' });
+  const { user } = useAuth();
+  const [form, setForm] = useState({ especialidad: '', hospital: '', observaciones: '' });
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.especialidad || !form.motivo) {
-      toast.error('Completa todos los campos');
+    if (!form.especialidad || !form.hospital) {
+      toast.error('Selecciona especialidad y hospital');
       return;
     }
     setLoading(true);
     try {
-      await listaEsperaService.create(form);
+      await listaEsperaService.create({
+        pacienteId: user.id,
+        especialidad: form.especialidad,
+        hospital: form.hospital,
+        prioridad: 2,
+        observaciones: form.observaciones || undefined,
+      });
       toast.success('Solicitud enviada correctamente');
       navigate('/paciente/solicitudes');
-    } catch {
-      toast.error('Error al enviar la solicitud');
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Error al enviar la solicitud');
     } finally {
       setLoading(false);
     }
@@ -60,9 +57,7 @@ export const NuevaSolicitud = () => {
 
           <div className="px-6 py-4 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Especialidad requerida
-              </label>
+              <label className="block text-sm font-medium text-gray-600 mb-1">Especialidad requerida</label>
               <select
                 name="especialidad"
                 value={form.especialidad}
@@ -70,34 +65,38 @@ export const NuevaSolicitud = () => {
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               >
                 <option value="">Seleccionar especialidad...</option>
-                {ESPECIALIDADES.map(e => (
-                  <option key={e} value={e}>{e}</option>
-                ))}
+                {ESPECIALIDADES.map(e => <option key={e} value={e}>{e}</option>)}
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Motivo de consulta
-              </label>
+              <label className="block text-sm font-medium text-gray-600 mb-1">Hospital</label>
               <select
-                name="motivo"
-                value={form.motivo}
+                name="hospital"
+                value={form.hospital}
                 onChange={handleChange}
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
               >
-                <option value="">Seleccionar motivo...</option>
-                {MOTIVOS.map(m => (
-                  <option key={m} value={m}>{m}</option>
-                ))}
+                <option value="">Seleccionar hospital...</option>
+                {HOSPITALES.map(h => <option key={h} value={h}>{h}</option>)}
               </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">Observaciones (opcional)</label>
+              <textarea
+                name="observaciones"
+                value={form.observaciones}
+                onChange={handleChange}
+                rows={2}
+                placeholder="Describe brevemente tu situación..."
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              />
             </div>
 
             <div className="bg-gray-50 rounded-lg px-4 py-3">
               <p className="text-xs font-medium text-gray-500 mb-1">Prioridad asignada</p>
-              <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
-                Normal
-              </span>
+              <span className="px-2 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">Normal</span>
               <p className="text-xs text-gray-400 mt-1">Se ajusta según criterio clínico</p>
             </div>
           </div>
@@ -126,9 +125,8 @@ export const NuevaSolicitud = () => {
           </div>
           <div className="px-6 py-4 space-y-2 text-xs text-gray-500 leading-relaxed">
             <p>1. Tu solicitud ingresa a la lista de espera con estado <span className="px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-medium">Pendiente</span></p>
-            <p>2. El sistema te asignará una hora según disponibilidad y prioridad</p>
-            <p>3. Recibirás una notificación por email cuando se libere una hora</p>
-            <p>4. Podrás aceptar o rechazar la hora desde el portal</p>
+            <p>2. El funcionario te asignará una hora según disponibilidad y prioridad</p>
+            <p>3. Recibirás una notificación cuando se agenda tu cita</p>
           </div>
         </div>
       </div>

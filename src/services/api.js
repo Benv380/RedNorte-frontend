@@ -1,34 +1,30 @@
-// src/services/api.js — CREAR o CORREGIR este archivo
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: 'http://localhost:8080/api',  // ← /api es obligatorio
+const makeInstance = (baseURL) => {
+  const instance = axios.create({ baseURL, headers: { 'Content-Type': 'application/json' } });
 
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+  instance.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  });
 
-// Interceptor: adjunta token JWT en requests autenticadas
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// Interceptor: redirigir a /login si el token expira (401)
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+  instance.interceptors.response.use(
+    (res) => res,
+    (error) => {
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+      }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
-);
+  );
+  return instance;
+};
 
-export default api;
+export const pacienteApi = makeInstance(import.meta.env.VITE_PACIENTE_API_URL);
+export const medicoApi   = makeInstance(import.meta.env.VITE_MEDICO_API_URL);
+export const listaApi    = makeInstance(import.meta.env.VITE_LISTA_API_URL);
+
+export default listaApi;

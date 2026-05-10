@@ -1,10 +1,4 @@
-// src/hooks/useAuth.js (Modificación temporal)
-export const useAuth = () => {
-  return {
-    user: { name: "Admin Test", role: "ADMIN" },
-    loading: false,
-    isAuthenticated: true, // Forzamos la entrada
-    login: () => {},
-    logout: () => {}
-  };
-};
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
+
+export const useAuth = () => useContext(AuthContext);

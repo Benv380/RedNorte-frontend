@@ -30,3 +30,7 @@ coverage/
 
 # optional
 *.local
+
+# Claude Code
+.claude/
+CLAUDE.md

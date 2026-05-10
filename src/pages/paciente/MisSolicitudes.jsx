@@ -3,8 +3,10 @@ import { listaEsperaService } from '../../services/listaEsperaService';
 import { PosicionEspera } from '../../components/pacientes/PosicionEspera';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 export const MisSolicitudes = () => {
+  const { user } = useAuth();
   const [solicitudes, setSolicitudes] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -12,8 +14,9 @@ export const MisSolicitudes = () => {
   useEffect(() => { cargarSolicitudes(); }, []);
 
   const cargarSolicitudes = async () => {
+    if (!user?.id) { setLoading(false); return; }
     try {
-      const data = await listaEsperaService.getAll();
+      const data = await listaEsperaService.getByPaciente(user.id);
       setSolicitudes(data);
     } catch {
       toast.error('Error al cargar solicitudes');

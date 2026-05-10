@@ -1,0 +1,27 @@
+import axios from 'axios';
+import { PACIENTE_API_URL } from '../config/apiConfig';
+
+const pacienteApi = axios.create({
+  baseURL: PACIENTE_API_URL,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+pacienteApi.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+pacienteApi.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default pacienteApi;

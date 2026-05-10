@@ -1,36 +1,34 @@
-// src/services/pacienteService.js
-import api from './api';
+import pacienteApi from './pacienteApi';
 
 export const pacienteService = {
 
-  // Obtener todos los pacientes
   getAll: async () => {
-    const response = await api.get('/pacientes');
-    return response.data;
+    const res = await pacienteApi.get('/v1/pacientes');
+    return res.data;
   },
 
-  // Obtener un paciente por ID
   getById: async (id) => {
-    const response = await api.get(`/pacientes/${id}`);
-    return response.data;
+    const res = await pacienteApi.get(`/v1/pacientes/${id}`);
+    return res.data;
   },
 
-  // Crear un nuevo paciente
-  create: async (pacienteData) => {
-    const response = await api.post('/pacientes', pacienteData);
-    return response.data;
+  search: async (q) => {
+    const res = await pacienteApi.get('/v1/pacientes/buscar', { params: { q } });
+    return res.data;
   },
 
-  // Actualizar un paciente existente
-  update: async (id, pacienteData) => {
-    const response = await api.put(`/pacientes/${id}`, pacienteData);
-    return response.data;
+  create: async (data) => {
+    const res = await pacienteApi.post('/v1/pacientes', data);
+    return res.data;
   },
 
-  // Eliminar un paciente
+  update: async (id, data) => {
+    const res = await pacienteApi.put(`/v1/pacientes/${id}`, data);
+    return res.data;
+  },
+
   delete: async (id) => {
-    const response = await api.delete(`/pacientes/${id}`);
-    return response.data;
+    const res = await pacienteApi.delete(`/v1/pacientes/${id}`);
+    return res.data;
   },
-
 };

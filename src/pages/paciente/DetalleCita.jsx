@@ -16,8 +16,7 @@ export const DetalleCita = () => {
   const navigate = useNavigate();
   const [cita, setCita] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => { cargarCita(); }, [id]);
+  const [accionando, setAccionando] = useState(false);
 
   const cargarCita = async () => {
     try {
@@ -30,23 +29,31 @@ export const DetalleCita = () => {
     }
   };
 
+  useEffect(() => { cargarCita(); }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const cancelarCita = async () => {
+    setAccionando(true);
     try {
-      await citaService.cancel(id);
+      await citaService.cancelar(id, 'Cancelado por el paciente');
       toast.success('Cita cancelada correctamente');
       navigate('/paciente/citas');
     } catch {
       toast.error('Error al cancelar la cita');
+    } finally {
+      setAccionando(false);
     }
   };
 
   const confirmarCita = async () => {
+    setAccionando(true);
     try {
-      await citaService.update(id, { estado: 'CONFIRMADA' });
+      await citaService.confirmar(id);
       toast.success('Cita confirmada');
       cargarCita();
     } catch {
       toast.error('Error al confirmar la cita');
+    } finally {
+      setAccionando(false);
     }
   };
 
@@ -65,10 +72,7 @@ export const DetalleCita = () => {
   return (
     <div className='max-w-lg'>
       <div className='flex items-center gap-3 mb-6'>
-        <button
-          onClick={() => navigate('/paciente/citas')}
-          className='text-sm text-gray-500 hover:text-blue-600 transition-colors'
-        >
+        <button onClick={() => navigate('/paciente/citas')} className='text-sm text-gray-500 hover:text-blue-600'>
           ← Volver
         </button>
         <h1 className='text-2xl font-bold text-gray-800'>Detalle de cita</h1>
@@ -83,30 +87,34 @@ export const DetalleCita = () => {
         </div>
 
         <div className='divide-y divide-gray-100'>
-          <div className='px-6 py-3 flex justify-between'>
-            <span className='text-sm text-gray-500'>N° cita</span>
-            <span className='text-sm font-medium text-gray-800'>#{cita.id}</span>
-          </div>
-          <div className='px-6 py-3 flex justify-between'>
-            <span className='text-sm text-gray-500'>Especialidad</span>
-            <span className='text-sm font-medium text-gray-800'>{cita.especialidad}</span>
-          </div>
-          <div className='px-6 py-3 flex justify-between'>
-            <span className='text-sm text-gray-500'>Médico</span>
-            <span className='text-sm font-medium text-gray-800'>{cita.nombreMedico}</span>
-          </div>
+          {[
+            ['N° cita',     `#${cita.id}`],
+            ['Especialidad', cita.especialidad],
+            ['Médico',       cita.nombreMedico],
+            ['Hospital',     cita.hospital],
+            ['Box',          cita.boxNumero],
+          ].map(([label, value]) => value && (
+            <div key={label} className='px-6 py-3 flex justify-between'>
+              <span className='text-sm text-gray-500'>{label}</span>
+              <span className='text-sm font-medium text-gray-800'>{value}</span>
+            </div>
+          ))}
           <div className='px-6 py-3 flex justify-between'>
             <span className='text-sm text-gray-500'>Fecha y hora</span>
             <span className='text-sm font-medium text-gray-800'>
-              {new Date(cita.fechaHoraCita).toLocaleDateString('es-CL', {
-                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
-              })}
-              {' · '}
-              {new Date(cita.fechaHoraCita).toLocaleTimeString('es-CL', {
-                hour: '2-digit', minute: '2-digit'
-              })}
+              {cita.fechaHoraCita
+                ? `${new Date(cita.fechaHoraCita).toLocaleDateString('es-CL', {
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+                  })} · ${new Date(cita.fechaHoraCita).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}`
+                : '—'}
             </span>
           </div>
+          {cita.observaciones && (
+            <div className='px-6 py-3'>
+              <span className='text-sm text-gray-500 block mb-1'>Observaciones</span>
+              <span className='text-sm text-gray-700'>{cita.observaciones}</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -115,14 +123,16 @@ export const DetalleCita = () => {
           {cita.estado === 'PROGRAMADA' && (
             <button
               onClick={confirmarCita}
-              className='flex-1 px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors'
+              disabled={accionando}
+              className='flex-1 px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors'
             >
               Confirmar asistencia
             </button>
           )}
           <button
             onClick={cancelarCita}
-            className='flex-1 px-4 py-2 text-sm font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition-colors'
+            disabled={accionando}
+            className='flex-1 px-4 py-2 text-sm font-medium text-red-600 border border-red-300 rounded-lg hover:bg-red-50 disabled:opacity-50 transition-colors'
           >
             Cancelar cita
           </button>
