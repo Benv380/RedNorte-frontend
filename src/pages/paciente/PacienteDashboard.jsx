@@ -19,7 +19,6 @@ export const PacienteDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   const cargarDatos = async () => {
-<<<<<<< HEAD
     if (!user?.id) return;
     try {
       const resultado = await bffService.dashboardPaciente(user.id);
@@ -30,24 +29,6 @@ export const PacienteDashboard = () => {
       setLoading(false);
     }
   };
-=======
-  try {
-    if (!user?.id) return; // <-- no llamar si no hay id
-
-    const [solicitudesData, citasData] = await Promise.all([
-      listaEsperaService.getByPaciente(user.id),
-      citaService.getAll(),
-    ]);
-    setSolicitudes(solicitudesData);
-    setCitas(citasData);
-    setOfertasPendientes([]); // reasignación no disponible para PACIENTE
-  } catch {
-    toast.error('Error al cargar datos');
-  } finally {
-    setLoading(false);
-  }
-};
->>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
 
   useEffect(() => { cargarDatos(); }, [user?.id]);
 
@@ -172,16 +153,9 @@ export const PacienteDashboard = () => {
                 <tr key={s.id} className="hover:bg-gray-50">
                   <td className="px-5 py-3 text-sm text-gray-800">{s.especialidad}</td>
                   <td className="px-5 py-3">
-<<<<<<< HEAD
                     <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${ESTADO_ESTILO[s.estado] ?? 'bg-gray-100 text-gray-500'}`}>
                       {s.estado}
                     </span>
-=======
-                    <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${s.estado === 'PENDIENTE' ? 'bg-amber-100 text-amber-800' :
-                      s.estado === 'ASIGNADO' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-600'
-                      }`}>{s.estado}</span>
->>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
                   </td>
                   <td className="px-5 py-3 text-sm text-gray-600">
                     {s.posicion ? `#${s.posicion}` : '—'}

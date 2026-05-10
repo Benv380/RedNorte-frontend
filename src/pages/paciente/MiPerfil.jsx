@@ -19,29 +19,18 @@ const InfoCard = ({ mensaje, onClose }) => (
 
 export const MiPerfil = () => {
   const { user } = useAuth();
-<<<<<<< HEAD
   const [editando, setEditando]   = useState(false);
   const [loading, setLoading]     = useState(!!user?.id);
   const [guardando, setGuardando] = useState(false);
+  const [infoAbierta, setInfoAbierta] = useState(null);
   const [paciente, setPaciente]   = useState(null);
   const [form, setForm]           = useState({ nombre: '', apellido: '', rut: '', telefono: '', direccion: '', fechaNacimiento: '' });
-=======
-  const [editando, setEditando] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [infoAbierta, setInfoAbierta] = useState(null); // 'nombre' | 'rut' | null
-  const [form, setForm] = useState({
-    nombre: user?.nombre || '',
-    rut: user?.rut || '',
-    telefono: user?.telefono || '',
-    email: user?.email || '',
-  });
->>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
 
   useEffect(() => {
     if (!user?.id) return;
     (async () => {
       try {
-        const data = await pacienteService.getById(user.id);
+        const data = await pacienteService.getByUsuarioId(user.id);
         setPaciente(data);
         setForm({
           nombre:          data.nombre          ?? '',
@@ -60,6 +49,8 @@ export const MiPerfil = () => {
   }, [user?.id]);
 
   const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
+  const toggleInfo = (campo) => setInfoAbierta(prev => prev === campo ? null : campo);
 
   const handleGuardar = async () => {
     if (!paciente?.id) return;
@@ -101,23 +92,16 @@ export const MiPerfil = () => {
     setInfoAbierta(null);
   };
 
-  const toggleInfo = (campo) => {
-    setInfoAbierta(prev => prev === campo ? null : campo);
-  };
-
   if (loading) return (
     <div className='flex items-center justify-center h-64'>
       <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600' />
     </div>
   );
 
-  const campos = [
-    { name: 'nombre',          label: 'Nombre',              type: 'text',  placeholder: 'María' },
-    { name: 'apellido',        label: 'Apellido',            type: 'text',  placeholder: 'González' },
-    { name: 'rut',             label: 'RUT',                 type: 'text',  placeholder: '12.345.678-9' },
-    { name: 'fechaNacimiento', label: 'Fecha de nacimiento', type: 'date',  placeholder: '' },
-    { name: 'telefono',        label: 'Teléfono',            type: 'tel',   placeholder: '+56 9 1234 5678' },
-    { name: 'direccion',       label: 'Dirección',           type: 'text',  placeholder: 'Calle 123, Ciudad' },
+  const camposEditables = [
+    { name: 'fechaNacimiento', label: 'Fecha de nacimiento', type: 'date' },
+    { name: 'telefono',        label: 'Teléfono',            type: 'tel',  placeholder: '+56 9 1234 5678' },
+    { name: 'direccion',       label: 'Dirección',           type: 'text', placeholder: 'Calle 123, Ciudad' },
   ];
 
   return (
@@ -138,50 +122,22 @@ export const MiPerfil = () => {
             </div>
           </div>
           {!editando && (
-            <button
-              onClick={() => setEditando(true)}
-              className='text-sm text-blue-600 hover:text-blue-800 font-medium'
-            >
+            <button onClick={() => setEditando(true)} className='text-sm text-blue-600 hover:text-blue-800 font-medium'>
               Editar
             </button>
           )}
         </div>
 
         <div className='divide-y divide-gray-100'>
-<<<<<<< HEAD
-          {campos.map(c => (
-            <div key={c.name} className='px-6 py-3'>
-              <label className='block text-xs font-medium text-gray-500 mb-1'>{c.label}</label>
-              {editando ? (
-                <input
-                  type={c.type}
-                  name={c.name}
-                  value={form[c.name]}
-                  onChange={handleChange}
-                  placeholder={c.placeholder}
-                  className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-                />
-              ) : (
-                <p className='text-sm text-gray-800'>{form[c.name] || '—'}</p>
-              )}
-            </div>
-          ))}
-=======
-
-          {/* Nombre completo */}
+          {/* Nombre completo — no editable */}
           <div className='px-6 py-3'>
             <div className='flex items-center gap-2 mb-1'>
               <label className='text-xs font-medium text-gray-500'>Nombre completo</label>
               {editando && (
                 <button
                   onClick={() => toggleInfo('nombre')}
-                  title='Más información'
-                  className={`w-4 h-4 rounded-full text-white text-xs flex items-center justify-center leading-none transition-colors ${
-                    infoAbierta === 'nombre' ? 'bg-blue-700' : 'bg-blue-400 hover:bg-blue-600'
-                  }`}
-                >
-                  !
-                </button>
+                  className={`w-4 h-4 rounded-full text-white text-xs flex items-center justify-center leading-none transition-colors ${infoAbierta === 'nombre' ? 'bg-blue-700' : 'bg-blue-400 hover:bg-blue-600'}`}
+                >!</button>
               )}
             </div>
             {editando && infoAbierta === 'nombre' && (
@@ -190,23 +146,18 @@ export const MiPerfil = () => {
                 onClose={() => setInfoAbierta(null)}
               />
             )}
-            <p className='text-sm text-gray-800 mt-1'>{user?.nombre || '—'}</p>
+            <p className='text-sm text-gray-800 mt-1'>{form.nombre} {form.apellido}</p>
           </div>
 
-          {/* RUT */}
+          {/* RUT — no editable */}
           <div className='px-6 py-3'>
             <div className='flex items-center gap-2 mb-1'>
               <label className='text-xs font-medium text-gray-500'>RUT</label>
               {editando && (
                 <button
                   onClick={() => toggleInfo('rut')}
-                  title='Más información'
-                  className={`w-4 h-4 rounded-full text-white text-xs flex items-center justify-center leading-none transition-colors ${
-                    infoAbierta === 'rut' ? 'bg-blue-700' : 'bg-blue-400 hover:bg-blue-600'
-                  }`}
-                >
-                  !
-                </button>
+                  className={`w-4 h-4 rounded-full text-white text-xs flex items-center justify-center leading-none transition-colors ${infoAbierta === 'rut' ? 'bg-blue-700' : 'bg-blue-400 hover:bg-blue-600'}`}
+                >!</button>
               )}
             </div>
             {editando && infoAbierta === 'rut' && (
@@ -218,39 +169,37 @@ export const MiPerfil = () => {
             <p className='text-sm text-gray-800 mt-1'>{form.rut || '—'}</p>
           </div>
 
-          {/* Teléfono */}
-          <div className='px-6 py-3'>
-            <label className='block text-xs font-medium text-gray-500 mb-1'>Teléfono</label>
-            {editando ? (
-              <input
-                type='text'
-                name='telefono'
-                value={form.telefono}
-                onChange={handleChange}
-                placeholder='+56 9 1234 5678'
-                className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
-              />
-            ) : (
-              <p className='text-sm text-gray-800'>{form.telefono || '—'}</p>
-            )}
-          </div>
->>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
+          {/* Campos editables */}
+          {camposEditables.map(c => (
+            <div key={c.name} className='px-6 py-3'>
+              <label className='block text-xs font-medium text-gray-500 mb-1'>{c.label}</label>
+              {editando ? (
+                <input
+                  type={c.type}
+                  name={c.name}
+                  value={form[c.name]}
+                  onChange={handleChange}
+                  placeholder={c.placeholder || ''}
+                  className='w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
+                />
+              ) : (
+                <p className='text-sm text-gray-800'>{form[c.name] || '—'}</p>
+              )}
+            </div>
+          ))}
 
-          {/* Email */}
+          {/* Email — no editable */}
           <div className='px-6 py-3'>
             <label className='block text-xs font-medium text-gray-500 mb-1'>Email</label>
             <p className='text-sm text-gray-800'>{user?.email}</p>
             <p className='text-xs text-gray-400 mt-0.5'>El email no se puede modificar</p>
           </div>
-<<<<<<< HEAD
-=======
 
           {/* Rol */}
           <div className='px-6 py-3'>
             <label className='block text-xs font-medium text-gray-500 mb-1'>Rol</label>
             <p className='text-sm text-gray-800'>{user?.rol || 'Paciente'}</p>
           </div>
->>>>>>> 995d1123bddaec4905e3c0c33c30dbbb33010fd1
         </div>
 
         {editando && (

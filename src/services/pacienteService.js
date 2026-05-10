@@ -12,6 +12,11 @@ export const pacienteService = {
     return res.data;
   },
 
+  getByUsuarioId: async (usuarioId) => {
+    const res = await pacienteApi.get(`/v1/pacientes/usuario/${usuarioId}`);
+    return res.data;
+  },
+
   search: async (q) => {
     const res = await pacienteApi.get('/v1/pacientes/buscar', { params: { q } });
     return res.data;
