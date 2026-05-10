@@ -4,10 +4,10 @@ export const authService = {
   login: async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
 
-    const { token, rol, nombre } = res.data;
+    const {id, token, rol, nombre } = res.data;
 
     localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify({ token, rol, nombre, email }));
+    localStorage.setItem('user', JSON.stringify({ id, token, rol, nombre, email }));
 
     return res.data;
   },

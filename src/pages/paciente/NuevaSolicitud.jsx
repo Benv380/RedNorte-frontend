@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { listaEsperaService } from '../../services/listaEsperaService';
 import { toast } from 'sonner';
+import { useAuth } from "../../hooks/useAuth";
 
 const ESPECIALIDADES = [
   'Cardiología',
@@ -21,9 +22,19 @@ const MOTIVOS = [
   'Urgencia',
 ];
 
+const CENTROS_ASISTENCIALES = [
+  'Hospital del Norte',
+  'Hospital San José',
+  'Centro de Salud Familiar (CESFAM) Lo Barnechea',
+  'Centro de Salud Familiar (CESFAM) Huechuraba',
+  'Clínica Especialidades Norte',
+  'Centro Médico RedNorte Quilicura',
+];
+
 export const NuevaSolicitud = () => {
   const navigate = useNavigate();
-  const [form, setForm] = useState({ especialidad: '', motivo: '' });
+  const { user } = useAuth();
+  const [form, setForm] = useState({ especialidad: '', motivo: '', hospital: '' });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -32,13 +43,19 @@ export const NuevaSolicitud = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.especialidad || !form.motivo) {
+    if (!form.especialidad || !form.motivo || !form.hospital) { // 👈 aquí
       toast.error('Completa todos los campos');
       return;
     }
     setLoading(true);
     try {
-      await listaEsperaService.create(form);
+      await listaEsperaService.create({
+        pacienteId: user.id,
+        especialidad: form.especialidad,
+        hospital: form.hospital,
+        prioridad: 2,
+        observaciones: form.motivo || '',
+      });
       toast.success('Solicitud enviada correctamente');
       navigate('/paciente/solicitudes');
     } catch {
@@ -47,7 +64,6 @@ export const NuevaSolicitud = () => {
       setLoading(false);
     }
   };
-
   return (
     <div>
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Nueva solicitud</h1>
@@ -72,6 +88,23 @@ export const NuevaSolicitud = () => {
                 <option value="">Seleccionar especialidad...</option>
                 {ESPECIALIDADES.map(e => (
                   <option key={e} value={e}>{e}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Centro asistencial
+              </label>
+              <select
+                name="hospital"
+                value={form.hospital}
+                onChange={handleChange}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+              >
+                <option value="">Seleccionar centro asistencial...</option>
+                {CENTROS_ASISTENCIALES.map(c => (
+                  <option key={c} value={c}>{c}</option>
                 ))}
               </select>
             </div>
