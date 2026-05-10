@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { medicoService } from '../../services/medicoService';
 import { listaEsperaService } from '../../services/listaEsperaService';
 import { citaService } from '../../services/citaService';
+import { pacienteService } from '../../services/pacienteService';
 import { toast } from 'sonner';
 
 const ESTADO_CITA = {
@@ -20,13 +22,38 @@ const ESTADO_SOL = {
 };
 
 export const HistoriaClinica = () => {
-  const [query, setQuery]           = useState('');
-  const [buscando, setBuscando]     = useState(false);
-  const [resultados, setResultados] = useState([]);
-  const [paciente, setPaciente]     = useState(null);
-  const [citas, setCitas]           = useState([]);
+  const [searchParams] = useSearchParams();
+  const [query, setQuery]             = useState('');
+  const [buscando, setBuscando]       = useState(false);
+  const [resultados, setResultados]   = useState([]);
+  const [paciente, setPaciente]       = useState(null);
+  const [citas, setCitas]             = useState([]);
   const [solicitudes, setSolicitudes] = useState([]);
-  const [cargando, setCargando]     = useState(false);
+  const pidInicial = searchParams.get('pacienteId');
+  const [cargando, setCargando] = useState(!!(pidInicial && pidInicial !== 'undefined'));
+
+  // Auto-carga si el dashboard envió ?pacienteId=X (X = usuarioId)
+  useEffect(() => {
+    const pid = searchParams.get('pacienteId');
+    if (!pid || pid === 'undefined' || pid === '') return;
+    (async () => {
+      try {
+        const p = await pacienteService.getByUsuarioId(pid);
+        setPaciente(p);
+        // pid es el usuarioId — mismo valor guardado en lista_espera.paciente_id
+        const [c, s] = await Promise.all([
+          citaService.getByPaciente(pid),
+          listaEsperaService.getByPaciente(pid),
+        ]);
+        setCitas(Array.isArray(c) ? c : []);
+        setSolicitudes(Array.isArray(s) ? s : []);
+      } catch {
+        toast.error('Error al cargar el historial del paciente');
+      } finally {
+        setCargando(false);
+      }
+    })();
+  }, [searchParams]);
 
   const buscar = async (e) => {
     e.preventDefault();
@@ -52,9 +79,11 @@ export const HistoriaClinica = () => {
     setResultados([]);
     setCargando(true);
     try {
+      // usuarioId es el ID que lista-espera y citas usan como pacienteId
+      const pacienteId = p.usuarioId ?? p.id;
       const [c, s] = await Promise.all([
-        citaService.getByPaciente(p.id),
-        listaEsperaService.getByPaciente(p.id),
+        citaService.getByPaciente(pacienteId),
+        listaEsperaService.getByPaciente(pacienteId),
       ]);
       setCitas(Array.isArray(c) ? c : []);
       setSolicitudes(Array.isArray(s) ? s : []);
@@ -224,7 +253,7 @@ export const HistoriaClinica = () => {
         </>
       )}
 
-      {!paciente && resultados.length === 0 && !buscando && (
+      {!paciente && resultados.length === 0 && !buscando && !cargando && (
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
           <p className="text-gray-400 text-sm">Ingresa el RUT o correo del paciente para ver su historial</p>
         </div>

@@ -138,7 +138,7 @@ export const MedicoDashboard = () => {
                 {citasHoy.map(c => (
                   <tr key={c.id} className="hover:bg-gray-50">
                     <td className="px-5 py-3 text-sm font-medium text-gray-800">
-                      {c.listaEspera?.pacienteNombre || '—'}
+                      {c.nombrePaciente || c.pacienteNombre || c.listaEspera?.pacienteNombre || '—'}
                     </td>
                     <td className="px-5 py-3 text-sm text-gray-600">{c.especialidad || '—'}</td>
                     <td className="px-5 py-3 text-sm text-gray-600">
@@ -165,7 +165,7 @@ export const MedicoDashboard = () => {
                         </button>
                       )}
                       <button
-                        onClick={() => navigate(`/medico/historia?pacienteId=${c.listaEspera?.pacienteId}`)}
+                        onClick={() => navigate(`/medico/historia?pacienteId=${c.pacienteId || c.listaEspera?.pacienteId || ''}`)}
                         className="text-blue-600 hover:text-blue-800 text-xs font-medium"
                       >
                         Ficha
