@@ -10,7 +10,7 @@ export const reasignacionService = {
     }
   },
   responder: async (id, acepta) => {
-    const res = await listaEsperaApi.put(`/v1/citas/${id}/confirmar`);
+    const res = await listaEsperaApi.put(`/v1/citas/${id}/confirmar`, { acepta });
     return res.data;
   },
 };

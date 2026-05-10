@@ -34,7 +34,7 @@ export const AlertaReasignacion = ({ oferta, onRespuesta }) => {
           ¿Deseas tomarla?
         </p>
       </div>
-      <div className="flex gap-2 flex-shrink-0">
+      <div className="flex gap-2 shrink-0">
         <button
           onClick={handleAceptar}
           className="px-3 py-1.5 text-xs font-medium bg-green-100 text-green-800 border border-green-400 rounded-lg hover:bg-green-200 transition-colors"
