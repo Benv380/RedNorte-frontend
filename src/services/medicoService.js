@@ -12,6 +12,11 @@ export const medicoService = {
     return res.data;
   },
 
+  getMiPerfil: async () => {
+  const res = await medicoApi.get('/v1/medicos/mi-perfil');
+  return res.data;
+  },
+
   getByEspecialidad: async (especialidad) => {
     const res = await medicoApi.get(`/v1/medicos/especialidad/${especialidad}`);
     return res.data;

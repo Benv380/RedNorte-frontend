@@ -97,6 +97,9 @@ export const Navbar = () => {
                     {user.rol?.replace('_', ' ')}
                   </p>
                   <p className="text-xs text-gray-500">{user.email}</p>
+                    {user.especialidad && (
+                    <p className="text-xs text-gray-400 italic">{user.especialidad}</p>
+                  )}
                 </div>
                 <button
                   onClick={handleLogout}

@@ -5,17 +5,15 @@ import { listaEsperaService } from '../../services/listaEsperaService';
 import { toast } from 'sonner';
 
 const ESPECIALIDADES = [
-  'Cardiología', 'Neurología', 'Traumatología', 'Oftalmología',
-  'Dermatología', 'Pediatría', 'Ginecología', 'Urología', 'Medicina General',
+  'Cardiologia', 'Neurologia', 'Traumatologia', 'Oftalmologia',
+  'Dermatologia', 'Pediatria', 'Ginecologia', 'Urologia', 'Medicina General',
 ];
 
 const CENTROS_ASISTENCIALES = [
-  'Hospital del Norte',
-  'Hospital San José',
-  'Centro de Salud Familiar (CESFAM) Lo Barnechea',
-  'Centro de Salud Familiar (CESFAM) Huechuraba',
-  'Clínica Especialidades Norte',
-  'Centro Médico RedNorte Quilicura',
+  'Hospital Rednorte Norte',
+  'Hospital Rednorte Sur',
+  'Hospital Rednorte Centro',
+  'Hospital Rednorte Oriente',
 ];
 
 export const NuevaSolicitud = () => {

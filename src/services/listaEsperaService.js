@@ -42,6 +42,11 @@ export const listaEsperaService = {
     return res.data;
   },
 
+  getByEspecialidad: async (especialidad) => {
+  const res = await listaEsperaApi.get(`/v1/lista-espera/especialidad/${especialidad}`);
+  return res.data;
+},
+
   delete: async (id) => {
     const res = await listaEsperaApi.delete(`/v1/lista-espera/${id}`);
     return res.data;

@@ -44,22 +44,27 @@ export const PacienteDashboard = () => {
   const proximaCita   = data?.proximaCita   ?? null;
   const realizadas    = citas.filter(c => c.estado === 'REALIZADA').length;
 
-  return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
-        Bienvenido, {user?.nombre || user?.email}
-      </h1>
+      return (
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-6">
+            Bienvenido, {user?.nombre || user?.email}
+          </h1>
 
-      {/* Alertas de reasignación (si las hubiera) */}
-      {citas
-        .filter(c => c.estado === 'CANCELADA')
-        .map(oferta => (
-          <AlertaReasignacion
-            key={oferta.id}
-            oferta={oferta}
-            onRespuesta={cargarDatos}
-          />
-        ))}
+          {/* Solicitudes que volvieron a lista de espera */}
+    {solicitudes
+      .filter(s => s.estado === 'PENDIENTE' && citas.some(c => 
+        c.estado === 'CANCELADA' && c.especialidad === s.especialidad
+      ))
+      
+  .map(s => (
+    <div key={s.id} className="bg-amber-50 border border-amber-300 rounded-xl p-4 mb-4">
+      <p className="text-sm font-semibold text-amber-800 mb-1">Tu cita fue cancelada</p>
+      <p className="text-sm text-amber-700">
+        Tu solicitud de <strong>{s.especialidad}</strong> volvió a lista de espera. 
+        Se te asignará una nueva hora próximamente.
+      </p>
+    </div>
+  ))}
 
       {/* KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
